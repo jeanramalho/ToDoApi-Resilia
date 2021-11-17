@@ -8,6 +8,25 @@ const usuario = (app, bd) => {
         })
     })
 
+    app.get('/usuario/:nome/:idade', (req, res) => {
+        const nome = req.params.nome
+        const idade = req.params.idade
+        res.json({
+            "mensagem": "rota ativada por parametro",
+            "parametro1": nome,
+            "parametro2": idade
+        })
+    })
+
+    app.get('/usuario/:email', (req, res) => {
+        const email = req.params.email
+        for (let i = 0; i <= bd.length; i++) {
+            if (bd[i].email == email) {
+                return `o email encontrado e ${email}`
+            }
+        }
+    })
+
     app.post('/usuario', (req, res) => {
         // Usar o try-catch para pegar o erro, caso a validacao
         // do model de erro, ou outro erro apareça
