@@ -59,4 +59,16 @@ const usuario = (app, bd) => {
 
 }
 
+app.put('/usuario/:email', (req, res) => {
+
+    const email = req.params.email
+
+
+    res.json({
+        "mensagem": "Estou atualizando",
+        "email": email
+    })
+
+})
+
 module.exports = usuario
