@@ -1,7 +1,6 @@
-//cria banco de dados mocado
 const bd = {
-    "tarefa": [],
-    "usuario": []
+    "tarefa" : [],
+    "usuario" : []
 }
 
 module.exports = bd

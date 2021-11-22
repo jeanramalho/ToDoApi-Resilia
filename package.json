@@ -1,14 +1,26 @@
 {
-  "name": "todo-api",
+  "name": "todoapi",
   "version": "1.0.0",
-  "description": "API de uma lista de tarefas",
-  "main": "index.js",
+  "description": "API de uma To Do list",
+  "main": "./src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon ./src/index.js "
+    "serve": "node ./src/app.js",
+    "dev": "nodemon ./src/app.js"
   },
-  "author": "Jean Ramalho",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cinmcantu/ToDoApi.git"
+  },
+  "keywords": [
+    "todolist"
+  ],
+  "author": "cinmcantu",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cinmcantu/ToDoApi/issues"
+  },
+  "homepage": "https://github.com/cinmcantu/ToDoApi#readme",
   "dependencies": {
     "express": "^4.17.1",
     "sqlite3": "^5.0.2"
