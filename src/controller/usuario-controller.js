@@ -1,30 +1,68 @@
 const Usuario = require('../model/Usuario')
 
 const usuario = (app, bd) => {
-
     app.get('/usuario', (req, res) => {
-        res.json({
-            "usuarios": bd.usuario
+
+        bd.all('SELECT * FROM USUARIOS', (error, rows) => {
+            if (error) {
+                res.json({
+                    "mensagem": error.message,
+                    "error": true
+                })
+            } else {
+                res.json({
+                    "usuarios": rows,
+                    "count": rows.length,
+                    "error": false
+                })
+            }
         })
     })
 
-    app.get('/usuario/:nome/:idade', (req, res) => {
-        const nome = req.params.nome
-        const idade = req.params.idade
-        res.json({
-            "mensagem": "rota ativada por parametro",
-            "parametro1": nome,
-            "parametro2": idade
-        })
-    })
+    // AS ROTAS ABAIXO NAO FUNCIONAM MAIS, POIS O BD QUE ESTAMOS USANDO
+    // NAO É MAIS O OBJETO COM ARRAY
 
     app.get('/usuario/:email', (req, res) => {
         const email = req.params.email
-        for (let i = 0; i <= bd.length; i++) {
-            if (bd[i].email == email) {
-                return `o email encontrado e ${email}`
-            }
+
+        //  Logica de busca do usuário no bd
+        const resultadoBusca = bd.usuario.filter((usuario => usuario.email === email))
+
+        // Verificacao da existencia de usuario com parametro buscado
+        if (resultadoBusca.length > 0) {
+            res.json({
+                "resultado": resultadoBusca,
+                "count": resultadoBusca.length,
+                "error": false
+            })
+        } else {
+            res.json({
+                "mensagem": `Não foi encontrado nenhum usuário com email "${email}"`,
+                "error": true
+            })
         }
+    })
+
+    app.delete('/usuario/:email', (req, res) => {
+        const email = req.params.email
+
+        // Logica de deleção da entidade no bd
+        const indexUsuario = bd.usuario.findIndex((usuario => usuario.email === email))
+
+        // Verificacao da existencia de usuario com parametro buscado
+        if (indexUsuario > -1) {
+            const usuarioDeletado = bd.usuario.splice(indexUsuario, 1)
+            res.json({
+                "deletado": usuarioDeletado,
+                "error": false
+            })
+        } else {
+            res.json({
+                "mensagem": `Usuário com email "${email}" não existe`,
+                "error": true
+            })
+        }
+
     })
 
     app.post('/usuario', (req, res) => {
@@ -47,7 +85,7 @@ const usuario = (app, bd) => {
         } catch (error) {
             // Resposta em caso de erro
             res.json({
-                "mensager": error.message,
+                "mensagem": error.message,
                 "erro": true
             })
         }
@@ -57,18 +95,45 @@ const usuario = (app, bd) => {
 
     })
 
-}
+    app.put('/usuario/:email', (req, res) => {
+        const email = req.params.email
+        const body = req.body
 
-app.put('/usuario/:email', (req, res) => {
+        // Logica de atualizaçao da entidade no bd
+        const indexUsuario = bd.usuario.findIndex((usuario => usuario.email === email))
 
-    const email = req.params.email
+        // Verificacao da existencia de usuario com parametro buscado
+        try {
+            if (indexUsuario > -1) {
+                const usuarioAntigo = bd.usuario[indexUsuario]
+                const usuarioAtualizado = new Usuario(
+                    body.nome || usuarioAntigo.nome,
+                    body.email || usuarioAntigo.email,
+                    body.senha || usuarioAntigo.senha,
+                    usuarioAntigo.id,
+                )
+
+                res.json({
+                    "atualizado": usuarioDeletado,
+                    "error": false
+                })
+            } else {
+                res.json({
+                    "mensagem": `Usuário com email "${email}" não existe`,
+                    "error": true
+                })
+            }
+        } catch (error) {
+            res.json({
+                "mensagem": error.message,
+                "error": true
+            })
+        }
 
 
-    res.json({
-        "mensagem": "Estou atualizando",
-        "email": email
+
     })
 
-})
+}
 
 module.exports = usuario
