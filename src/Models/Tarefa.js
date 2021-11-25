@@ -1,11 +1,23 @@
+const moment = require('moment')
 var id = 0
 
+
 class Tarefa {
-    constructor(usuario, titulo, status){
-        this.id = id++
-        this.usuario = usuario
+    constructor(titulo, descricao, status, idUsuario, idExistente, array){
+
+        if(array){
+            if(idExistente){
+            this.id = idExistente
+            } else {
+                this.id = id++
+            }
+        }
+        
         this.titulo = titulo
+        this.descricao = descricao
         this.status = this._validaStatus(status)
+        this.date = moment().format("YYYY-MM-DD")
+        this.idUsuario = idUsuario
     }
 
     _validaStatus(status){

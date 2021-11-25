@@ -1,50 +1,16 @@
-const Usuario = require('../model/Usuario')
-const UsuarioDAO = require('../DAO/UsuarioDAO')
+const Usuario = require('../../model/Usuario')
 
 const usuario = (app,bd) =>{
-    const novoUsuarioDAO = new UsuarioDAO(bd)
 
-    app.get('/usuario', (req, res)=> {
-        novoUsuarioDAO.pegaTodosUsuarios()
-        .then((resposta)=>{
-            res.json(resposta)
+    app.get('/array/usuario', (req, res)=> {
+        res.json({
+            "usuarios" : bd.usuario,
+            "count": bd.usuario.length,
+            "error" : false
         })
-        .catch((erro)=>{
-            res.json(erro)
-        })   
     })
 
-    app.post('/usuario', (req, res)=> {
-        // Usar o try-catch para pegar o erro, caso a validacao
-        // do model de erro, ou outro erro apareça
-        try {
-            const body = req.body
-            const novoUsuario = new Usuario(body.nome, body.email, body.senha)
-            
-            //Logica de inserção da entidade no bd
-            novoUsuarioDAO.insereUsuario(novoUsuario)
-            .then((resposta)=>{
-                res.json(resposta)
-            })
-            .catch((erro)=>{
-                res.json(erro)
-            })
-            //--------------------------------
-            
-        } catch (error) {
-            // Resposta em caso de erro
-            res.json({
-                "mensagem" : error.message,
-                "erro" : true 
-            })
-        }
-                
-    })
-
-    // AS ROTAS ABAIXO NAO FUNCIONAM MAIS, POIS O BD QUE ESTAMOS USANDO
-    // NAO É MAIS O OBJETO COM ARRAY
-
-    app.get('/usuario/:email', (req, res)=> {
+    app.get('/array/usuario/:email', (req, res)=> {
         const email = req.params.email
 
         //  Logica de busca do usuário no bd
@@ -65,7 +31,7 @@ const usuario = (app,bd) =>{
         }
     })
 
-    app.delete('/usuario/:email', (req, res)=> {
+    app.delete('/array/usuario/:email', (req, res)=> {
         const email = req.params.email
 
         // Logica de deleção da entidade no bd
@@ -87,7 +53,37 @@ const usuario = (app,bd) =>{
 
     })
 
-    app.put('/usuario/:email', (req, res)=>{
+    app.post('/array/usuario', (req, res)=> {
+        // Usar o try-catch para pegar o erro, caso a validacao
+        // do model de erro, ou outro erro apareça
+        try {
+            const body = req.body
+            const novoUsuario = new Usuario(body.nome, body.email, body.senha, true)
+            
+            //Logica de inserção da entidade no bd
+            bd.usuario.push(novoUsuario)
+            console.log(bd.usuario)
+            //--------------------------------
+
+            // Resposta para o cliente
+            res.json({
+                "requisicao" : novoUsuario,
+                "erro" : false 
+            })
+        } catch (error) {
+            // Resposta em caso de erro
+            res.json({
+                "mensagem" : error.message,
+                "erro" : true 
+            })
+        }
+        
+
+
+        
+    })
+
+    app.put('/array/usuario/:email', (req, res)=>{
         const email = req.params.email
         const body = req.body
 
@@ -102,21 +98,24 @@ const usuario = (app,bd) =>{
                     body.nome || usuarioAntigo.nome,
                     body.email || usuarioAntigo.email,
                     body.senha || usuarioAntigo.senha,
-                    usuarioAntigo.id,
+                    true,
+                    usuarioAntigo.id
                 )
+
+                bd.usuario[indexUsuario] = usuarioAtualizado
                 
                 res.json({
-                    "atualizado": usuarioDeletado,
+                    "atualizado": usuarioAtualizado,
                     "error" : false
                 })
             } else {
-                res.json({
+                res.status(500).json({
                     "mensagem": `Usuário com email "${email}" não existe`,
                     "error" : true
                 })
             }
         } catch (error) {
-            res.json({
+            res.status(500).json({
                 "mensagem" : error.message,
                 "error" : true
             })

@@ -1,4 +1,4 @@
-const rotas = (app)=>{
+const index = (app)=>{
     
     app.get('/', (req, res)=> {
         console.log("Cheguei na rota")
@@ -7,4 +7,4 @@ const rotas = (app)=>{
     })
 }
 
-module.exports = rotas
+module.exports = index

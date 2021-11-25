@@ -1,11 +1,17 @@
 var id = 0
 
 class Usuario {
-    constructor(nome, email, senha){
-        this.id = id++
+    constructor(nome, email, senha, array, idExistente){
+        if(array){
+                if(idExistente){
+                this.id = idExistente
+            } else {
+                this.id = id++
+            }
+        }
         this.nome = nome
         this.email = email
-        this.senha = this.verificaSenha(senha)
+        this.senha = this._verificaSenha(senha)
     }
 
     _verificaSenha(senha){
@@ -18,4 +24,4 @@ class Usuario {
 
 }
 
-module.exports = 
+module.exports = Usuario

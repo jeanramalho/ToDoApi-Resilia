@@ -2,30 +2,34 @@
   "name": "todoapi",
   "version": "1.0.0",
   "description": "API de uma To Do list",
-  "main": "./src/app.js",
+  "main": "./src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "node ./src/app.js",
-    "dev": "nodemon ./src/app.js"
+    "test": "jest",
+    "start": "node ./src/server.js",
+    "dev": "nodemon"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cinmcantu/ToDoApi.git"
+    "url": "git+https://github.com/jeanramalho/ToDoApi-Resilia"
   },
   "keywords": [
     "todolist"
   ],
-  "author": "cinmcantu",
+  "author": "jeanramalho",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cinmcantu/ToDoApi/issues"
+    "url": "https://github.com/jeanramalho/ToDoApi-Resilia/issues"
   },
-  "homepage": "https://github.com/cinmcantu/ToDoApi#readme",
+  "homepage": "https://github.com/jeanramalho/ToDoApi-Resilia#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
+    "moment": "^2.29.1",
     "sqlite3": "^5.0.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "jest": "^27.3.1",
+    "nodemon": "^2.0.15",
+    "supertest": "^6.1.6"
   }
 }
